@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <terracottaConfig url="localhost:9510"/>
+    <diskStore path="java.io.tmpdir/shiro-ehcache"/>
+    <defaultCache
+        maxElementsInMemory="10000"
+        eternal="false"
+        timeToIdleSeconds="120"
+        timeToLiveSeconds="120"
+        overflowToDisk="false"
+        diskPersistent="false"
+        diskExpiryThreadIntervalSeconds="120">
+        <terracotta/>
+    </defaultCache>
+    <cache name="shiro-activeSessionCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           timeToLiveSeconds="0"
+           timeToIdleSeconds="0"
+           diskPersistent="false"
+           overflowToDisk="false"
+           diskExpiryThreadIntervalSeconds="600">
+        <terracotta/>
+    </cache>
+    <!-- Add more cache entries as desired, for example,
+    Realm authc/authz caching: -->
+</ehcache>

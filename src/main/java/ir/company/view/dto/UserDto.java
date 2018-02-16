@@ -1,31 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package test.shiro.captcha.rest.model;
+package ir.company.view.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  *
- * @author mohammad
+ * @author Mohammad-Hossein Jamali
  */
-@Table(name = "tbl_user")
-@Entity
-public class User {
+public class UserDto implements Serializable {
     
-    @Id
     private Long id;
     private String name;
     private String username;
     private String password;
 
-    public User() {
-    }    
-    
     public Long getId() {
         return id;
     }
@@ -56,6 +43,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }        
-    
+    }
+        
 }
