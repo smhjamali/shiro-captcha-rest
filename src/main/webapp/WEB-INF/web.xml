@@ -36,8 +36,12 @@
         <session-timeout>
             30
         </session-timeout>
+        <cookie-config>
+            <path>/</path>
+        </cookie-config>        
     </session-config>
     <welcome-file-list>
         <welcome-file>faces/guest/login.xhtml</welcome-file>
-    </welcome-file-list>
+    </welcome-file-list>        
+    
 </web-app>

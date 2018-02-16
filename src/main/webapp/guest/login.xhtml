@@ -9,20 +9,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
     <h:body>
-        <div class="container ui-g">
-            <div class="ui-g-12">Login</div>
-            <div class="ui-g-12 ui-g">
-                <div class="ui-g-6">Username: </div>
-                <div class="ui-g-6"><p:inputText value="#{userManager.user.username}" /></div>
-                <div class="ui-g-6">Password: </div>
-                <div class="ui-g-6"><p:password value="#{userManager.user.password}" /></div>                
-            </div>
-            <div class="ui-g-6">
-                <p:commandButton value="#{userManager.login}" />
-            </div>
-            <div class="ui-g-6">
-                <p:link outcome="new_user.xhtml" value="create new user" />
-            </div>
-        </div>
+        <h:form>
+            <div class="container ui-g">
+                <div class="ui-g-12">Login</div>
+                <div class="ui-g-12 ui-g">
+                    <div class="ui-g-6">Username: </div>
+                    <div class="ui-g-6"><p:inputText value="#{userManager.user.username}" /></div>
+                    <div class="ui-g-6">Password: </div>
+                    <div class="ui-g-6"><p:password value="#{userManager.user.password}" /></div>                
+                </div>
+                <div class="ui-g-6">
+                    <p:commandButton action="#{userManager.login}" value="login" />
+                </div>
+                <div class="ui-g-6">
+                    <p:link outcome="new_user.xhtml" value="create new user" />
+                </div>
+            </div>            
+        </h:form>
     </h:body>
 </html>
