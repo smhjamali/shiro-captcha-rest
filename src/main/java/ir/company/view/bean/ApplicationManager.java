@@ -7,18 +7,18 @@ import javax.inject.Named;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.authc.credential.PasswordService;
-import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.web.mgt.WebSecurityManager;
 
 /**
  *
- * @author jamali
+ * @author Mohammad-Hossein Jamali
  */
 @Named
 @ApplicationScoped
 public class ApplicationManager {
 
     @Inject
-    private SecurityManager securityManager;
+    private WebSecurityManager securityManager;
 
     @Inject
     private PasswordMatcher passwordMatcher;
@@ -39,13 +39,13 @@ public class ApplicationManager {
         this.passwordMatcher = passwordMatcher;
     }
 
-    public SecurityManager getSecurityManager() {
+    public WebSecurityManager getSecurityManager() {
         return securityManager;
     }
 
-    public void setSecurityManager(SecurityManager securityManager) {
+    public void setSecurityManager(WebSecurityManager securityManager) {
         this.securityManager = securityManager;
-    }    
+    }   
 
     public PasswordService getPasswordService() {
         return passwordService;

@@ -93,7 +93,7 @@ passwordMatcher.passwordService = $passwordService
 # JNDI Datasource
 ds = org.apache.shiro.jndi.JndiObjectFactory   
 ds.requiredType = javax.sql.DataSource   
-ds.resourceName = java:/jdbc/TestDs
+ds.resourceName = java:/jdbc/orderhandler
 # JDBC realm config  
 jdbcRealm = org.apache.shiro.realm.jdbc.JdbcRealm  
 jdbcRealm.permissionsLookupEnabled = false 

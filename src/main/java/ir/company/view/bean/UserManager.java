@@ -27,7 +27,7 @@ public class UserManager implements Serializable {
     }
     
     public void saveUserInfo(){
-        String encryptedPassword = applicationManager.getPasswordMatcher().getPasswordService().encryptPassword(password);
+        String encryptedPassword = applicationManager.getPasswordService().encryptPassword(user.getName());
         user.setPassword(encryptedPassword);
         System.out.println(user.getPassword());
     }
