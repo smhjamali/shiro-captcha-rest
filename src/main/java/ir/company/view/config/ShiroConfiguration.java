@@ -4,11 +4,11 @@ import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordMatcher;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.apache.shiro.jndi.JndiObjectFactory;
-import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
@@ -68,7 +68,7 @@ public class ShiroConfiguration {
     public RedisManager getRedisManager(){
         if(redisManager == null) {
             redisManager = new RedisManager();
-            redisManager.setHost("127.0.0.1");
+            redisManager.setHost(ApplicationConfiguration.REDIS_SERVER_ADDRESS);
             redisManager.setPort(6379);
             redisManager.setExpire(600);
             redisManager.setTimeout(0);
@@ -98,11 +98,11 @@ public class ShiroConfiguration {
     public DefaultPasswordService getPasswordService(){
         if(passwordService == null){
             DefaultHashService hashService = new DefaultHashService();
-            hashService.setHashIterations(500000);
+            hashService.setHashIterations(200000);
             hashService.setHashAlgorithmName("SHA-512");
             hashService.setGeneratePublicSalt(Boolean.TRUE);
             Sha512Hash sha512 = new Sha512Hash();
-            sha512.setIterations(500000);
+            sha512.setIterations(200000);
             sha512.setSalt(new SecureRandomNumberGenerator().nextBytes());
             hashService.setPrivateSalt(sha512);
             passwordService = new DefaultPasswordService();
@@ -125,18 +125,19 @@ public class ShiroConfiguration {
         if(securityManager == null) {           
             JndiObjectFactory jndiObjectFactory = new JndiObjectFactory();
             jndiObjectFactory.setRequiredType(javax.sql.DataSource.class);
-            jndiObjectFactory.setResourceName("java:/jdbc/orderhandler");        
+            jndiObjectFactory.setResourceName(ApplicationConfiguration.JNDI_RESOURCE);        
             JdbcRealm realm = new JdbcRealm();
             realm.setPermissionsLookupEnabled(Boolean.FALSE);
             realm.setDataSource((DataSource) jndiObjectFactory.getInstance());
             realm.setAuthenticationQuery("SELECT password FROM tbl_user WHERE username = ?");
-            realm.setCredentialsMatcher(passwordMatcher);
+            realm.setCredentialsMatcher(getPasswordMatcher());
             securityManager = new DefaultWebSecurityManager(realm);
-            RememberMeManager rememberMeManager = new CookieRememberMeManager();
-            ((CookieRememberMeManager) rememberMeManager).setCipherKey("kPH+bIxk5D2deZiIxcaaaA==".getBytes());
+            CookieRememberMeManager rememberMeManager = new CookieRememberMeManager();            
+            rememberMeManager.setCipherKey(Base64.decode("kPH+bIxk5D2deZiIxcaaaA=="));
             securityManager.setRememberMeManager(rememberMeManager);
             securityManager.setSessionManager(getSessionManager());
-            securityManager.setCacheManager(getRedisCacheManager());            
+            securityManager.setCacheManager(getRedisCacheManager());    
+            
         }
         return securityManager;
     }
@@ -151,7 +152,7 @@ public class ShiroConfiguration {
             ShiroFilter shiro = new ShiroFilter();
             
             authc.setLoginUrl(WebPages.LOGIN_URL);
-            //authc.setSuccessUrl(successUrl);            
+            authc.setSuccessUrl(WebPages.SUCCESS_URL);            
             user.setLoginUrl(WebPages.LOGIN_URL);
             FilterChainManager fcMan = new DefaultFilterChainManager();
             

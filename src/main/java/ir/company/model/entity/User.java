@@ -5,10 +5,13 @@
  */
 package ir.company.model.entity;
 
+import ir.company.view.dto.UserDto;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -17,6 +20,16 @@ import javax.persistence.Table;
  */
 @Table(name = "tbl_user")
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "User.findByUsername",
+            query = "SELECT u FROM User u WHERE u.username = :username"
+    ),
+    @NamedQuery(
+            name = "User.findCountByUsername",
+            query = "SELECT COUNT(u) FROM User u WHERE u.username = :username"
+    )    
+})
 public class User {
     
     @Id
@@ -28,6 +41,15 @@ public class User {
 
     public User() {
     }    
+    
+    public UserDto toUserDto(){
+        UserDto userDto = new UserDto();
+        userDto.setId(id);
+        userDto.setName(name);
+        userDto.setPassword(password);
+        userDto.setUsername(username);
+        return userDto;
+    }
     
     public Long getId() {
         return id;

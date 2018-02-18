@@ -15,8 +15,19 @@
                 <div class="ui-g-6">Name:</div>
                 <div class="ui-g-6"><p:inputText value="#{userManager.user.name}" /></div>
             </div>
-            <div class="ui-g-12">
-                <p:commandButton action="#{userManager.saveUserInfo}" value="Save" />
+            <div class="ui-g">
+                <div class="ui-g-6">Username:</div>
+                <div class="ui-g-6"><p:inputText value="#{userManager.user.username}" /></div>
+            </div>            
+            <div class="ui-g">
+                <div class="ui-g-6">Password:</div>
+                <div class="ui-g-6"><p:password value="#{userManager.password}" /></div>
+            </div>            
+            <div class="ui-g-6">
+                <p:commandButton action="#{userManager.saveUserInfo}" value="Save" update="msg" />
+            </div>
+            <div class="ui-g-6">
+                <p:messages id="msg" globalOnly="true" />
             </div>
         </h:form>
     </h:body>

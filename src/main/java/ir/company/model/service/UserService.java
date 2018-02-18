@@ -19,11 +19,28 @@ public class UserService implements Serializable {
     @PersistenceContext(unitName = "sample")
     private EntityManager em;
     
-    public void createUser(UserDto userDto) {
+    public void createUser(UserDto userDto) throws UserServiceException {
+        if(isUsernameExist(userDto.getUsername())){
+            throw new UserServiceException("Username already exist");
+        }
         User user = new User();
         user.setName(userDto.getName());
         user.setPassword(userDto.getPassword());
         user.setUsername(userDto.getUsername());
         em.persist(user);
+    }
+    
+    public UserDto findByUsername(String username) {
+        User user = (User) em.createNamedQuery("User.findByUsername")
+                .setParameter("username", username)
+                .getSingleResult();
+        return user.toUserDto();
+    }
+    
+    public Boolean isUsernameExist(String username) {
+        Long count = (Long) em.createNamedQuery("User.findCountByUsername")
+                .setParameter("username", username)
+                .getSingleResult();        
+        return count > 0L;
     }
 }
