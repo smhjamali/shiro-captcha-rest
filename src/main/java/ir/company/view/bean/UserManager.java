@@ -4,6 +4,7 @@ import ir.company.model.service.UserService;
 import ir.company.model.service.UserServiceException;
 import ir.company.view.dto.UserDto;
 import ir.company.view.util.FacesUtils;
+import ir.company.view.util.OWASPUtils;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,12 +56,13 @@ public class UserManager implements Serializable {
         }
     }
     
-    public void login(){
+    public String login(){
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
         token.setRememberMe(true);
         Subject currentUser = SecurityUtils.getSubject();        
         try {
-            currentUser.login(token);
+            OWASPUtils.login(currentUser, token);
+            return "home";
         } catch (UnknownAccountException uae) {
             FacesUtils.addErrorMessage(uae.getMessage());
         } catch (IncorrectCredentialsException ice) {
@@ -72,6 +74,7 @@ public class UserManager implements Serializable {
         }catch ( AuthenticationException ae ) {    
             FacesUtils.addErrorMessage(ae.getMessage());
         }        
+        return null;
     }
     
     public UserDto getUser() {

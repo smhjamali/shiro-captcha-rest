@@ -1,6 +1,7 @@
 package ir.company.view.bean;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,12 +26,17 @@ public class ApplicationManager {
     
     @Inject       
     private PasswordService passwordService;
-
+        
     @PostConstruct
     private void init() {
         SecurityUtils.setSecurityManager(securityManager);
     }
 
+    @PreDestroy
+    private void destroy(){
+     
+    }
+    
     public PasswordMatcher getPasswordMatcher() {
         return passwordMatcher;
     }
@@ -54,5 +60,5 @@ public class ApplicationManager {
     public void setPasswordService(PasswordService passwordService) {
         this.passwordService = passwordService;
     }
-       
+
 }

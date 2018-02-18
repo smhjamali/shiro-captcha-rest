@@ -1,5 +1,7 @@
 package ir.company.view.config;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -10,6 +12,7 @@ import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.apache.shiro.jndi.JndiObjectFactory;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
+import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
@@ -69,12 +72,12 @@ public class ShiroConfiguration {
         if(redisManager == null) {
             redisManager = new RedisManager();
             redisManager.setHost(ApplicationConfiguration.REDIS_SERVER_ADDRESS);
-            redisManager.setPort(6379);
+            redisManager.setPort(ApplicationConfiguration.REDIS_SERVER_PORT);
             redisManager.setExpire(600);
             redisManager.setTimeout(0);
             
             RedisSessionDAO redisSessionDao = new RedisSessionDAO();
-            redisSessionDao.setKeyPrefix("shiro:session:");
+            redisSessionDao.setKeyPrefix(ApplicationConfiguration.REDIS_KEY_PREFIX);
             redisSessionDao.setRedisManager(redisManager);
             getSessionManager().setSessionDAO(redisSessionDao);
             
@@ -90,6 +93,12 @@ public class ShiroConfiguration {
             sessionManager.setSessionValidationScheduler(getExecutorServiceSessionValidationScheduler());
             sessionManager.setSessionValidationSchedulerEnabled(Boolean.TRUE);
             sessionManager.setDeleteInvalidSessions(Boolean.TRUE);
+            if(sessionManager.getSessionListeners() == null) {
+                sessionManager.setSessionListeners(new ArrayList<>());
+            }
+            List<SessionListener> sessionListeners = new ArrayList<>();
+            sessionListeners.add(new ShiroSessionListener());
+            sessionManager.setSessionListeners(sessionListeners);
         }
         return sessionManager;
     }
