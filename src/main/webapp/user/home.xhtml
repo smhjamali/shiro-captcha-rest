@@ -23,6 +23,10 @@
                 <p:column headerText="date">
                     <p:outputLabel value="#{userSession.loginDate}" />
                 </p:column>
+                <p:column headerText="action">
+                    <p:commandButton value="remove" 
+                                     action="#{userSessionManager.removeUserSession(userSession.sessionId)}" update="@form" />
+                </p:column>
             </p:dataTable>
         </h:form>
     </h:body>

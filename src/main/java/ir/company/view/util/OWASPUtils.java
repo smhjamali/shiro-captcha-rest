@@ -40,14 +40,14 @@ public class OWASPUtils {
         subject.login(token);
 
         //restore the attributes:
-        session = subject.getSession();
+        session = subject.getSession(Boolean.FALSE);
         for (Object key : attributes.keySet()) {
             session.setAttribute(key, attributes.get(key));
         }
         session.setAttribute("uid", token.getUsername());       
                                 
         RList<UserSessionDto> list = redissonClient.getList(token.getUsername());
-        list.add(FacesUtils.getCurrentUserSessionDto());
+        list.add(FacesUtils.getCurrentUserSessionDto(session.getId().toString()));
         
     }
     

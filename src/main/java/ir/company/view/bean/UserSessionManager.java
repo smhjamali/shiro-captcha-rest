@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 /**
@@ -30,6 +31,16 @@ public class UserSessionManager implements Serializable {
         Subject subject = SecurityUtils.getSubject();
         this.userSessions = new RedisUtils().getUserSessions(subject.getSession());
     }    
+    
+    public String removeUserSession(String sessionId){
+        Session session = SecurityUtils.getSubject().getSession();
+        new RedisUtils().invalidateSession(String.valueOf(session.getAttribute("uid")), sessionId);
+        if (sessionId.equals(SecurityUtils.getSubject().getSession().getId().toString())) {
+            return "login";
+        } else {
+            return null;
+        }        
+    }
     
     public List<UserSessionDto> getUserSessions() {
         return userSessions;

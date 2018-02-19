@@ -27,12 +27,12 @@ public class FacesUtils {
         return FacesContext.getCurrentInstance().getExternalContext();
     }
     
-    public static UserSessionDto getCurrentUserSessionDto(){
+    public static UserSessionDto getCurrentUserSessionDto(String sessionId){
         UserSessionDto userSessionDto = new UserSessionDto();
         ExternalContext ec = getExternalContext();
         Map<String, String> reqHeaderMap = ec.getRequestHeaderMap();        
         userSessionDto.setBrowserName(reqHeaderMap.get("User-Agent"));
-        userSessionDto.setSessionId(ec.getSessionId(Boolean.FALSE));
+        userSessionDto.setSessionId(sessionId);
         userSessionDto.setIp(getClientIPAddress((HttpServletRequest) ec.getRequest()));
         userSessionDto.setLoginDate(new Date());
         return userSessionDto;
