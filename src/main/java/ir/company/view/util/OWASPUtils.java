@@ -1,26 +1,27 @@
 package ir.company.view.util;
 
-import ir.company.view.config.ApplicationConfiguration;
+import ir.company.view.dto.UserSessionDto;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import redis.clients.jedis.Jedis;
+import org.redisson.api.RList;
+import org.redisson.api.RedissonClient;
 
 /**
  *
  * @author Mohammad-Hossein Jamali
  */
-public class OWASPUtils {    
+public class OWASPUtils {        
     
     /**
      * Stops current session and creates new one to prevent Session Fixation.
      * @param subject
      * @param token 
      */
-    public static void login(Subject subject, UsernamePasswordToken token){
+    public static void login(Subject subject, UsernamePasswordToken token, RedissonClient redissonClient){
         Session session = subject.getSession();
 
         //retain Session attributes to put in the new session after login:
@@ -43,10 +44,11 @@ public class OWASPUtils {
         for (Object key : attributes.keySet()) {
             session.setAttribute(key, attributes.get(key));
         }
-        session.setAttribute("uid", token.getUsername());
+        session.setAttribute("uid", token.getUsername());       
+                                
+        RList<UserSessionDto> list = redissonClient.getList(token.getUsername());
+        list.add(FacesUtils.getCurrentUserSessionDto());
         
-        Jedis jedis = new Jedis(ApplicationConfiguration.REDIS_SERVER_ADDRESS);
-        jedis.lpush(token.getUsername(), session.getId().toString());
     }
     
 }

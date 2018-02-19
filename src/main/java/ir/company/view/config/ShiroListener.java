@@ -18,10 +18,10 @@ import org.apache.shiro.web.mgt.WebSecurityManager;
 public class ShiroListener extends EnvironmentLoaderListener {
     
     @Inject 
-    WebSecurityManager webSecurityManager;
+    private WebSecurityManager webSecurityManager;
     
     @Inject
-    FilterChainResolver filterChainResolver;    
+    private FilterChainResolver filterChainResolver;    
     
     @Override
     public void contextInitialized(ServletContextEvent sce) {

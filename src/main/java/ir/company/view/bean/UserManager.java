@@ -3,9 +3,12 @@ package ir.company.view.bean;
 import ir.company.model.service.UserService;
 import ir.company.model.service.UserServiceException;
 import ir.company.view.dto.UserDto;
+import ir.company.view.dto.UserSessionDto;
 import ir.company.view.util.FacesUtils;
 import ir.company.view.util.OWASPUtils;
+import ir.company.view.util.RedisUtils;
 import java.io.Serializable;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -31,12 +34,13 @@ import org.apache.shiro.subject.Subject;
 public class UserManager implements Serializable {
     
     @Inject
-    private ApplicationManager applicationManager;    
+    private ApplicationManager applicationManager; 
+    
     @EJB
     private UserService userService;
     
     private UserDto user;
-    private String password;
+    private String password;    
     
     @PostConstruct
     private void init(){
@@ -59,9 +63,10 @@ public class UserManager implements Serializable {
     public String login(){
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
         token.setRememberMe(true);
-        Subject currentUser = SecurityUtils.getSubject();        
+        Subject subject = SecurityUtils.getSubject();        
         try {
-            OWASPUtils.login(currentUser, token);
+            
+            OWASPUtils.login(subject, token, applicationManager.getRedissonClient());            
             return "home";
         } catch (UnknownAccountException uae) {
             FacesUtils.addErrorMessage(uae.getMessage());
@@ -75,7 +80,7 @@ public class UserManager implements Serializable {
             FacesUtils.addErrorMessage(ae.getMessage());
         }        
         return null;
-    }
+    }   
     
     public UserDto getUser() {
         return user;
@@ -92,5 +97,5 @@ public class UserManager implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }   
-    
+        
 }
