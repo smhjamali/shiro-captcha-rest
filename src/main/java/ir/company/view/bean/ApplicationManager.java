@@ -8,7 +8,6 @@ import javax.inject.Named;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.authc.credential.PasswordService;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

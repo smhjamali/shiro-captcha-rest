@@ -16,11 +16,14 @@ import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.filter.authc.UserFilter;
+import org.apache.shiro.web.filter.authz.SslFilter;
 import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
 import org.apache.shiro.web.filter.mgt.FilterChainResolver;
 import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
+import org.apache.shiro.web.filter.session.NoSessionCreationFilter;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.WebSecurityManager;
@@ -158,24 +161,36 @@ public class ShiroConfiguration {
             FormAuthenticationFilter authc = new FormAuthenticationFilter();
             AnonymousFilter anon = new AnonymousFilter();
             UserFilter user = new UserFilter();
-            ShiroFilter shiro = new ShiroFilter();
+            ShiroFilter shiro = new ShiroFilter();            
+            LogoutFilter logout = new LogoutFilter();
+            SslFilter ssl = new SslFilter();
+            NoSessionCreationFilter noSessionCreation = new NoSessionCreationFilter();
             
             authc.setLoginUrl(WebPages.LOGIN_URL);
             authc.setSuccessUrl(WebPages.SUCCESS_URL);            
             user.setLoginUrl(WebPages.LOGIN_URL);
+            logout.setRedirectUrl(WebPages.LOGIN_URL);
+            
             FilterChainManager fcMan = new DefaultFilterChainManager();
             
-            fcMan.addFilter("authc", authc);
+            fcMan.addFilter("noSessionCreation", noSessionCreation);
+            fcMan.addFilter("ssl", ssl);
             fcMan.addFilter("anon", anon);
+            fcMan.addFilter("authc", authc);            
             fcMan.addFilter("user", user);
             fcMan.addFilter("shiro", shiro);
+            fcMan.addFilter("logout", logout);                        
             
             fcMan.createChain("/faces/guest/**", "anon");
             fcMan.createChain("/css/**", "anon");
             fcMan.createChain("/js/**", "anon");
             
             fcMan.createChain("/faces/user/**", "authc");                        
-                                    
+            fcMan.createChain("/rs/login", "noSessionCreation, ssl[8443], anon");
+            fcMan.createChain("/rs/**", "noSessionCreation, ssl[8443], anon");
+            fcMan.createChain("/logout", "logout");                        
+            //This will cause the session be destroyed and the user will be redirected to the URL specified in “redirectUrl” of logoutFilter.
+            
             PathMatchingFilterChainResolver resolver = new PathMatchingFilterChainResolver();
             resolver.setFilterChainManager(fcMan);
             filterChainResolver = resolver;

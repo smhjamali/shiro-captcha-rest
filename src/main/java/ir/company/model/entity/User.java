@@ -28,7 +28,11 @@ import javax.persistence.Table;
     @NamedQuery(
             name = "User.findCountByUsername",
             query = "SELECT COUNT(u) FROM User u WHERE u.username = :username"
-    )    
+    ),
+    @NamedQuery(
+            name = "User.findAll",
+            query = "SELECT u FROM User u"
+    )
 })
 public class User {
     
@@ -38,6 +42,7 @@ public class User {
     private String name;
     private String username;
     private String password;
+    private String token;
 
     public User() {
     }    
@@ -82,5 +87,13 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }        
-    
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+   
 }

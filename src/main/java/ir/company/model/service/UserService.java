@@ -3,6 +3,8 @@ package ir.company.model.service;
 import ir.company.model.entity.User;
 import ir.company.view.dto.UserDto;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -42,5 +44,15 @@ public class UserService implements Serializable {
                 .setParameter("username", username)
                 .getSingleResult();        
         return count > 0L;
+    }
+    
+    public List<UserDto> findAllUsers(){
+        List<User> users = em.createNamedQuery("User.findAll")
+                .getResultList();
+        List<UserDto> result = new ArrayList<>(users.size());
+        for(User user : users) {
+            result.add(user.toUserDto());
+        }
+        return result;
     }
 }
