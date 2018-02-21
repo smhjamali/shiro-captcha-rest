@@ -23,13 +23,13 @@ public class UserSessionManager implements Serializable {
     
     @PostConstruct
     private void init(){
-        Subject subject = SecurityUtils.getSubject();
-        this.userSessions = new RedisUtils().getUserSessions(subject.getSession());
+        refreshUserSessionList();
     }
     
     public void refreshUserSessionList() {
         Subject subject = SecurityUtils.getSubject();
-        this.userSessions = new RedisUtils().getUserSessions(subject.getSession());
+        String username = String.valueOf(subject.getSession().getAttribute("uid"));
+        this.userSessions = new RedisUtils().getSessionsByUsername(username);
     }    
     
     public String removeUserSession(String sessionId){

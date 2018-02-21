@@ -4,7 +4,6 @@ import ir.company.view.config.ApplicationConfiguration;
 import ir.company.view.dto.UserSessionDto;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -24,7 +23,7 @@ public class RedisUtils {
 
     public void removeSessionId(String username, String sessionId) {
         RedissonClient redissonClient = createRedissonClient();
-        List<UserSessionDto> list = redissonClient.getList(username);
+        List<UserSessionDto> list = redissonClient.getList(ApplicationConfiguration.REDIS_USER_SESSIONS_PREFIX + username);
         Iterator<UserSessionDto> userSessionDtoIterator = list.iterator();
         while (userSessionDtoIterator.hasNext()) {
             UserSessionDto userSessionDto = userSessionDtoIterator.next();
@@ -46,10 +45,9 @@ public class RedisUtils {
         }
     }
     
-    public List<UserSessionDto> getUserSessions(Session session){        
-        String username = String.valueOf(session.getAttribute("uid"));                
+    public List<UserSessionDto> getSessionsByUsername(String username){
         RedissonClient redissonClient = createRedissonClient();
-        List<UserSessionDto> result = redissonClient.getList(username);        
+        List<UserSessionDto> result = redissonClient.getList(ApplicationConfiguration.REDIS_USER_SESSIONS_PREFIX + username);
         return result;
     }
     

@@ -7,7 +7,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -27,7 +26,7 @@ public class FacesUtils {
         return FacesContext.getCurrentInstance().getExternalContext();
     }
     
-    public static UserSessionDto getCurrentUserSessionDto(String sessionId){
+    public static UserSessionDto getCurrentUserInfo(String sessionId){
         UserSessionDto userSessionDto = new UserSessionDto();
         ExternalContext ec = getExternalContext();
         Map<String, String> reqHeaderMap = ec.getRequestHeaderMap();        

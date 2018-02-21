@@ -64,7 +64,7 @@ public class ShiroConfiguration {
     public RedisCacheManager getRedisCacheManager(){
         if(redisCacheManager == null){
             redisCacheManager = new RedisCacheManager();
-            redisCacheManager.setKeyPrefix("shiro:cache:");
+            redisCacheManager.setKeyPrefix(ApplicationConfiguration.REDIS_CACHE_PREFIX);
             redisCacheManager.setRedisManager(getRedisManager());            
         }        
         return redisCacheManager;
@@ -184,10 +184,11 @@ public class ShiroConfiguration {
             fcMan.createChain("/faces/guest/**", "anon");
             fcMan.createChain("/css/**", "anon");
             fcMan.createChain("/js/**", "anon");
+            fcMan.createChain("/captcha", "anon");
             
             fcMan.createChain("/faces/user/**", "authc");                        
-            fcMan.createChain("/rs/login", "noSessionCreation, ssl[8443], anon");
-            fcMan.createChain("/rs/**", "noSessionCreation, ssl[8443], anon");
+            fcMan.createChain("/rs/login", "ssl[8443], anon");
+            fcMan.createChain("/rs/**", "ssl[8443], anon");
             fcMan.createChain("/logout", "logout");                        
             //This will cause the session be destroyed and the user will be redirected to the URL specified in “redirectUrl” of logoutFilter.
             

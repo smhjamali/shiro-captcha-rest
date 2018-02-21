@@ -1,5 +1,6 @@
 package ir.company.view.util;
 
+import ir.company.view.config.ApplicationConfiguration;
 import ir.company.view.dto.UserSessionDto;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -46,8 +47,8 @@ public class OWASPUtils {
         }
         session.setAttribute("uid", token.getUsername());       
                                 
-        RList<UserSessionDto> list = redissonClient.getList(token.getUsername());
-        list.add(FacesUtils.getCurrentUserSessionDto(session.getId().toString()));
+        RList<UserSessionDto> list = redissonClient.getList(ApplicationConfiguration.REDIS_USER_SESSIONS_PREFIX + token.getUsername());
+        list.add(FacesUtils.getCurrentUserInfo(session.getId().toString()));
         
     }
     
