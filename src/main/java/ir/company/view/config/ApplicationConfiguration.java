@@ -17,6 +17,6 @@ public class ApplicationConfiguration extends Application {
     public static String REDIS_KEY_PREFIX = "shiro:session:";
     public static String REDIS_CACHE_PREFIX = "shiro:cache:";
     public static String REDIS_USER_SESSIONS_PREFIX = "application:users:";
-    public static String JNDI_RESOURCE = "java:/jdbc/TestDs";
+    public static String JNDI_RESOURCE = "java:/jdbc/orderhandler";
     
 }
